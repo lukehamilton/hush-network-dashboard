@@ -3,6 +3,10 @@ import 'es6-promise/auto'
 import { createApp } from './app'
 import ProgressBar from './components/ProgressBar.vue'
 
+import VueSocketIO from 'vue-socket.io';
+
+Vue.use(VueSocketIO, 'http://localhost:8090')
+
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
 document.body.appendChild(bar.$el)

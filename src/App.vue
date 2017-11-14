@@ -15,11 +15,57 @@
         </a>
       </nav>
     </header>
-    <transition name="fade" mode="out-in">
+    <h1>Luke</h1>
+    <div>
+      <p v-if="isConnected">We're connected to the server!</p>
+      <p>Message from server: "{{socketMessage}}"</p>
+      <button @click="pingServer()">Ping Server</button>
+    </div>
+    <!-- <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
-    </transition>
+    </transition> -->
   </div>
 </template>
+
+<script>
+  export default {
+    data() {
+      return {
+        isConnected: false,
+        socketMessage: ''
+      }
+    },
+
+    sockets: {
+      connect() {
+        // Fired when the socket connects.
+        this.isConnected = true;
+      },
+
+      stream: function(val){
+        console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+      },
+
+      disconnect() {
+        this.isConnected = false;
+      },
+
+      // Fired when the server sends something on the "messageChannel" channel.
+      messageChannel(data) {
+        this.socketMessage = data
+      }
+    },
+
+    methods: {
+      pingServer() {
+        console.log('clickerd buton');
+        // Send the "pingServer" event to the server.
+        this.$socket.emit('pingServer', 'PING!')
+      }
+    }
+  }
+</script>
+
 
 <style lang="stylus">
 body

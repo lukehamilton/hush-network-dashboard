@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const path = require('path')
 const LRU = require('lru-cache')
@@ -5,8 +7,20 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
 const microcache = require('route-cache')
+const http = require('http')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
+
+
+var hush = require('bitcoin');
+
+var client = new hush.Client({
+  host: process.env.RPC_HOST,
+  port: process.env.RPC_PORT,
+  user: process.env.RPC_USER,
+  pass: process.env.RPC_PASSWORD,
+  timeout: 30000
+});
 
 const isProd = process.env.NODE_ENV === 'production'
 const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -112,11 +126,49 @@ function render (req, res) {
   })
 }
 
-app.get('*', isProd ? render : (req, res) => {
+
+app.get('/top', isProd ? render : (req, res) => {
   readyPromise.then(() => render(req, res))
 })
 
+app.get('/api/blockcount', (req, res) => {
+  client.cmd('getblockcount', function(err, blockcount, resHeaders){
+    if (err) return console.log(err);
+    res.json({message: blockcount});
+  });
+});
+
+// const server = new http.Server(app);
+//
+// var io = require('socket.io').listen(app);
+
+
 const port = process.env.PORT || 8080
+
+const server = new http.Server(app);
+const io = require('socket.io')(server);
+
+// const WS_PORT = process.env.PORT || 8090;
+const WS_PORT = 8090;
+
+server.listen(WS_PORT);
+
+io.on('connection', (socket) => {
+  // <insert relevant code here>
+  socket.on('pingServer', function(data) {
+    console.log('WS event sent');
+  });
+
+  //send data to client
+  setInterval(function(){
+    socket.emit('stream', {'title': "A new title via Socket.IO!"});
+  }, 1000);
+
+  console.log('SOCKET connection');
+  // socket.emit('mappy:playerbatch', playerbatch);
+});
+
+
 app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })
