@@ -142,9 +142,7 @@ app.get('/api/blockcount', (req, res) => {
 //
 // var io = require('socket.io').listen(app);
 
-
 const port = process.env.PORT || 8080
-
 const server = new http.Server(app);
 const io = require('socket.io')(server);
 
@@ -180,7 +178,8 @@ io.on('connection', (socket) => {
 });
 
 
-// app.listen(port, () => {
-//   console.log(`server started at localhost:${port}`)
-// })
-+app.listen(port,'0.0.0.0')
+//app.listen(port, () => {
+//  console.log(`server started at localhost:${port}`)
+//}
+
+app.listen(port,'0.0.0.0')
