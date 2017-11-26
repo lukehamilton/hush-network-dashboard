@@ -151,7 +151,7 @@ const io = require('socket.io')(server);
 // const WS_PORT = process.env.PORT || 8090;
 const WS_PORT = 8090;
 
-// server.listen(WS_PORT);
+server.listen(WS_PORT);
 
 io.on('connection', (socket) => {
   // <insert relevant code here>
