@@ -17,9 +17,14 @@
     </header>
     <h1>Luke</h1>
     <div>
-      <p v-if="isConnected">We're connected to the server!</p>
+      <h1>Block Height</h1>
+      <div>{{blockHeight}}</div>
+      <h1>Circulation</h1>
+      <div>{{circulation}}</div>
+
+      <!-- <p v-if="isConnected">We're connected to the server!</p>
       <p>Message from server: "{{socketMessage}}"</p>
-      <button @click="pingServer()">Ping Server</button>
+      <button @click="pingServer()">Ping Server</button> -->
     </div>
     <!-- <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
@@ -32,7 +37,8 @@
     data() {
       return {
         isConnected: false,
-        socketMessage: ''
+        blockHeight: '',
+        circulation: ''
       }
     },
 
@@ -42,8 +48,12 @@
         this.isConnected = true;
       },
 
-      stream: function(val){
-        console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+      blockHeight: function(blockHeight){
+        this.blockHeight = blockHeight
+      },
+
+      circulation: function(circulation) {
+        this.circulation = circulation
       },
 
       disconnect() {

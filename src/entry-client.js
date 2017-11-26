@@ -5,7 +5,8 @@ import ProgressBar from './components/ProgressBar.vue'
 
 import VueSocketIO from 'vue-socket.io';
 
-Vue.use(VueSocketIO, 'http://localhost:8090')
+// Vue.use(VueSocketIO, 'http://localhost:8090')
+Vue.use(VueSocketIO, 'http://138.197.87.192:8090')
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()

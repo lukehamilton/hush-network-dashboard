@@ -151,7 +151,7 @@ const io = require('socket.io')(server);
 // const WS_PORT = process.env.PORT || 8090;
 const WS_PORT = 8090;
 
-server.listen(WS_PORT);
+// server.listen(WS_PORT);
 
 io.on('connection', (socket) => {
   // <insert relevant code here>
@@ -161,14 +161,26 @@ io.on('connection', (socket) => {
 
   //send data to client
   setInterval(function(){
-    socket.emit('stream', {'title': "A new title via Socket.IO!"});
-  }, 1000);
+
+    // Block Height
+    client.cmd('getblockcount', function(err, blockHeight, resHeaders){
+      if (err) return console.log(err);
+      socket.emit('blockHeight', blockHeight);
+    });
+
+    // Circulation
+    // client.cmd('gettxoutsetinfo', function(err, data, resHeaders) {
+    //   if (err) return console.log(err);
+    //   socket.emit('circulation', data.total_amount);
+    // })
+
+  }, 15000);
 
   console.log('SOCKET connection');
-  // socket.emit('mappy:playerbatch', playerbatch);
 });
 
 
-app.listen(port, () => {
-  console.log(`server started at localhost:${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`server started at localhost:${port}`)
+// })
++app.listen(port,'0.0.0.0')
